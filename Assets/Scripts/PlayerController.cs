@@ -16,11 +16,12 @@ public class PlayerController : MonoBehaviour
     Vector3 displacement, desiredVelocity;
     Rigidbody rb;
     [SerializeField] float moveSpeed = 500f, meleeRange = 1f, meleeLifetime, timescaleMulti = 0.5f,
-                    projectileLifetime, projectileCooldown = 1f, meleeCooldown = 0.5f, meleeTime,
-                    rangedTime;
+                    projectileLifetime = 1f, dodgeCooldown = 1f, projectileCooldown = 1f, meleeCooldown = 0.5f, 
+                    meleeTime, rangedTime, dodgeTime, dodgeDistance = 10f;
     [SerializeField] GameObject melee, projectile;
-    bool playerMelee, playerRanged;
+    bool playerMelee, playerRanged, playerDodge;
     public PlayerState playerState = PlayerState.Idle;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,13 +42,18 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity != Vector3.zero)
             rb.velocity = Vector3.zero;
         playerState = PlayerState.Ranged;
-        Debug.Log("RangedAttack entered");
-        Debug.Log("Button held down");
         Time.timeScale = timescaleMulti;
         displacement = new Vector3(
                 Input.GetAxisRaw("Horizontal"), transform.position.y, Input.GetAxisRaw("Vertical")
                 );
         FaceStickDirection();
+    }
+
+    void Dodge()
+    {
+        playerState = PlayerState.Dodge;
+        transform.position += transform.forward * dodgeDistance;
+        dodgeTime = dodgeCooldown;
     }
 
     void ShootProjectile()
@@ -63,11 +69,13 @@ public class PlayerController : MonoBehaviour
     {
         transform.forward = new Vector3(displacement.x, 0, displacement.z);
     }
+
     // Update is called once per frame
     void Update()
     {
         playerMelee = Input.GetButtonDown("Melee");
         playerRanged = Input.GetButton("Ranged");
+        playerDodge = Input.GetButtonDown("Dodge");
 
         if (playerMelee && meleeTime <= 0)
         {
@@ -76,12 +84,10 @@ public class PlayerController : MonoBehaviour
                 MeleeAttack();
             }
         }
+
         if (playerRanged && rangedTime <= 0)
         {
-            //if (playerState == PlayerState.Idle || playerState == PlayerState.Move)
-            //{
             RangedAttack();
-            //}
         }
         if (Input.GetButtonUp("Ranged") && rangedTime <= 0)
         {
@@ -91,8 +97,16 @@ public class PlayerController : MonoBehaviour
             rangedTime = projectileCooldown;
             playerState = PlayerState.Idle;
         }
+
+        if (playerDodge && dodgeTime <= 0)
+        {
+            Dodge();
+            playerState = PlayerState.Idle;
+        }
+
         meleeTime -= Time.deltaTime;
         rangedTime -= Time.deltaTime;
+        dodgeTime -= Time.deltaTime;
     }
 
     void FixedUpdate()
