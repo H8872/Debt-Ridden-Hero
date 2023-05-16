@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class BossController : MonoBehaviour
 {
+    public enum BossState {
+        Idle,
+        Attacking,
+        Tracking,
+        Hurt
+    }
+    public BossState bossState;
+    Animator anim;
     [SerializeField] GameObject Slam, Projectile;
     GameObject player;
+    PlayerController pControl;
+    [SerializeField] float turningSpeed = 1;
     
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindWithTag("Player");
+        pControl = player.GetComponent<PlayerController>();
+        anim = GetComponent<Animator>();
     }
 
     void PlayerTargetedSlamGround(float delay)
@@ -49,6 +61,25 @@ public class BossController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        switch(bossState)
+        {
+            case BossState.Idle:
+                if(pControl.playerState != PlayerController.PlayerState.Dead)
+                {
+                    bossState = BossState.Tracking;
+                }
+                break;
+            case BossState.Tracking:
+                transform.LookAt(player.transform);
+                //Quaternion.RotateTowards(transform.rotation,);
+                break;
+            default:
+                break;
+        }
+        if(pControl.playerState == PlayerController.PlayerState.Dead)
+        {
+            bossState = BossState.Idle;
+        }
         Debug.Log(Time.time);
     }
 }
