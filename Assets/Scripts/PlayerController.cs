@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
         if (playerState == PlayerState.Idle || playerState == PlayerState.Move)
         {
             displacement = new Vector3(
-                Input.GetAxisRaw("Horizontal"), transform.position.y, Input.GetAxisRaw("Vertical")
+                Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")
                 );
             displacement = Vector3.ClampMagnitude(displacement, 1);
             rb.velocity = displacement * Time.deltaTime * moveSpeed;
