@@ -255,10 +255,13 @@ MonoBehaviour:
   meleeLifetime: 0.5
   timescaleMulti: 0.5
   projectileLifetime: 1
+  dodgeCooldown: 1
   projectileCooldown: 1
   meleeCooldown: 0.5
   meleeTime: 0
   rangedTime: 0
+  dodgeTime: 0
+  dodgeDistance: 7
   melee: {fileID: 291780954175749561, guid: f570d65eb5bf6bd4b98c388d53c8710b, type: 3}
   projectile: {fileID: 5151624033488770561, guid: de0755448749a3b43a4db6ba87b22699, type: 3}
   playerState: 0
