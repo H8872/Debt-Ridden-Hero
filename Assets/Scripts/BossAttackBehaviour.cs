@@ -29,25 +29,22 @@ public class BossAttackBehaviour : MonoBehaviour
         {
             rb.AddForce(transform.forward*speed);
         }
+        hitBox.enabled = false;
+        //Hitbox transform scale changed for visual debug reasons
+        //Can be removed in case it breaks something
+        hitBox.transform.localScale = Vector3.one/2;
+        particles.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Hitbox transform scale changed for visual debug reasons
-        if(Time.time<hitDelay)
-        {
-            hitBox.enabled = false;
-            hitBox.transform.localScale = Vector3.one/2;
-            particles.gameObject.SetActive(false);
-        }
-        else
+        if(hitDelay<Time.time)
         {
             hitBox.enabled = true;
             hitBox.transform.localScale = Vector3.one;
             particles.gameObject.SetActive(true);
         }
-
         if(hitTime<Time.time)
         {
             hitBox.enabled = false;
@@ -55,6 +52,7 @@ public class BossAttackBehaviour : MonoBehaviour
             if(attackType == AttackType.Projectile || attackType == AttackType.BeamRay)
                 particles.Stop();
         }
+
         if(particles.isStopped && hitTime<Time.time)
         {
             Destroy(gameObject);

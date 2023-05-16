@@ -519,9 +519,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1764547554, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
-      propertyPath: m_Constraints
-      value: 126
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: turningSpeed
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 8599042786719328810, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: m_Name

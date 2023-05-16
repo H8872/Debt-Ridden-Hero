@@ -12,6 +12,7 @@ public class BossController : MonoBehaviour
     }
     public BossState bossState;
     Animator anim;
+    Transform eye;
     [SerializeField] GameObject Slam, Projectile;
     GameObject player;
     PlayerController pControl;
@@ -23,6 +24,7 @@ public class BossController : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         pControl = player.GetComponent<PlayerController>();
         anim = GetComponent<Animator>();
+        eye = transform.GetChild(1);
     }
 
     void PlayerTargetedSlamGround(float delay)
@@ -70,8 +72,9 @@ public class BossController : MonoBehaviour
                 }
                 break;
             case BossState.Tracking:
-                transform.LookAt(player.transform);
-                //Quaternion.RotateTowards(transform.rotation,);
+                eye.LookAt(player.transform);
+                Vector3 lookTo = Vector3.Scale(eye.rotation.eulerAngles, Vector3.up);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(lookTo), Time.deltaTime * turningSpeed);
                 break;
             default:
                 break;
