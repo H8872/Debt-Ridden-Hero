@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
         Hurt
     }
 
-    Vector3 displacement;
+    Vector3 displacement, desiredVelocity;
     Rigidbody rb;
     [SerializeField] float moveSpeed = 500f, meleeRange = 1f;
     [SerializeField] GameObject melee;
@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
 
             if (rb.velocity.magnitude > 0)
             {
+                transform.forward = new Vector3(displacement.x, 0, displacement.z);
                 playerState = PlayerState.Move;
             } else {
                 playerState = PlayerState.Idle;
