@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
         Dead
     }
 
-    Vector3 displacement, desiredVelocity;
+    Vector3 displacement, desiredVelocity, lookAt;
     Rigidbody rb;
     [SerializeField] float moveSpeed = 500f, meleeRange = 1f, meleeLifetime, timescaleMulti = 0.5f,
                     projectileLifetime = 1f, dodgeCooldown = 1f, projectileCooldown = 1f, meleeCooldown = 0.5f, 
@@ -42,11 +42,10 @@ public class PlayerController : MonoBehaviour
     {
         if (rb.velocity != Vector3.zero)
             rb.velocity = Vector3.zero;
+        if (lookAt == Vector3.zero)
+            lookAt = new Vector3(0f, 0f, 0.00001f);
         playerState = PlayerState.Ranged;
         Time.timeScale = timescaleMulti;
-        displacement = new Vector3(
-                Input.GetAxisRaw("Horizontal"), transform.position.y, Input.GetAxisRaw("Vertical")
-                );
         FaceStickDirection();
     }
 
@@ -68,7 +67,11 @@ public class PlayerController : MonoBehaviour
 
     void FaceStickDirection()
     {
-        transform.forward = new Vector3(displacement.x, 0, displacement.z);
+        if (displacement != Vector3.zero)
+        {
+            lookAt = displacement;
+        }
+        transform.forward = new Vector3(lookAt.x, 0, lookAt.z);
     }
 
     // Update is called once per frame
@@ -112,15 +115,17 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        displacement = new Vector3(
+                                Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")
+                                );
+        displacement = Vector3.ClampMagnitude(displacement, 1);
+
         if (playerState == PlayerState.Idle || playerState == PlayerState.Move)
         {
-            displacement = new Vector3(
-                Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")
-                );
-            displacement = Vector3.ClampMagnitude(displacement, 1);
+
             rb.velocity = displacement * Time.deltaTime * moveSpeed;
 
-            if (rb.velocity.magnitude > 0)
+            if (rb.velocity.sqrMagnitude > 0)
             {
                 FaceStickDirection();
                 playerState = PlayerState.Move;
