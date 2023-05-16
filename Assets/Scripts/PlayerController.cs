@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
 
     Vector3 displacement, desiredVelocity, lookAt;
     Rigidbody rb;
-    [SerializeField] float moveSpeed = 500f, meleeRange = 1f, meleeLifetime, timescaleMulti = 0.5f,
+    [SerializeField] float moveSpeed = 500f, meleeRange = 1f, meleeLifetime = 0.5f, timescaleMulti = 0.5f,
                     projectileLifetime = 1f, dodgeCooldown = 1f, projectileCooldown = 1f, meleeCooldown = 0.5f, 
                     meleeTime, rangedTime, dodgeTime, dodgeDistance = 10f;
     [SerializeField] GameObject melee, projectile;
