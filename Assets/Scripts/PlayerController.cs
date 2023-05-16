@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
         Move,
         Dodge,
         Ranged,
-        Hurt
+        Hurt,
+        Dead
     }
 
     Vector3 displacement, desiredVelocity;
