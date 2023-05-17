@@ -107,6 +107,7 @@ public class BossController : MonoBehaviour
     public void GetHit(int damage)
     {
         Hp -= damage;
+        Debug.Log($"Ouch! My HP is {Hp}!");
     }
 
     // Update is called once per frame
@@ -132,6 +133,6 @@ public class BossController : MonoBehaviour
         {
             bossState = BossState.Idle;
         }
-        Debug.Log(Time.time);
+        // Debug.Log(Time.time);
     }
 }

@@ -17,8 +17,9 @@ public class PlayerController : MonoBehaviour
     Vector3 displacement, desiredVelocity, lookAt;
     Rigidbody rb;
     public float Hp = 10;
-    [SerializeField] float moveSpeed = 500f, timescaleMulti = 0.5f, dodgeCooldown = 1f, dodgeDistance = 10f;
-    [SerializeField] GameObject melee, projectile;
+    [SerializeField] public float moveSpeed = 500f, timescaleMulti = 0.5f, dodgeCooldown = 1f, 
+                        dodgeDistance = 10f, chargeTime = 0.5f, maxCharge = 5f, minCharge = 0.75f;
+    [SerializeField] GameObject projectile;
     GameObject bossGO;
     public float meleeTime, rangedTime, dodgeTime;
     bool playerMelee, playerRanged, playerDodge, controlEnabled;
@@ -46,6 +47,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = Vector3.zero;
         if (lookAt == Vector3.zero)
             lookAt = new Vector3(0f, 0f, 0.00001f);
+        chargeTime += Time.deltaTime;
         playerState = PlayerState.Ranged;
         Time.timeScale = timescaleMulti;
         FaceStickDirection();
@@ -119,6 +121,10 @@ public class PlayerController : MonoBehaviour
         //     }
         // }
 
+        // if (Input.GetButtonDown("Ranged") && controlEnabled && rangedTime <= 0)
+        // {    
+        //     timeNow = Time.time;
+        // }
         if (playerRanged && rangedTime <= 0)
         {
             RangedAttack();
@@ -126,6 +132,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonUp("Ranged") && controlEnabled && rangedTime <= 0)
         {
             Debug.Log("Button up");
+            if (chargeTime > maxCharge)
+                chargeTime = maxCharge;
             ShootProjectile();
             Time.timeScale = 1f;
             playerState = PlayerState.Idle;
