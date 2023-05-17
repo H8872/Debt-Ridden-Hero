@@ -61,6 +61,11 @@ public class BossController : MonoBehaviour
         }
     }
 
+    public void GetHit(int damage)
+    {
+        Hp -= damage;
+    }
+
     // Update is called once per frame
     void Update()
     {
