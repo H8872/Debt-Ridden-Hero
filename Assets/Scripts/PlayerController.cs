@@ -14,14 +14,15 @@ public class PlayerController : MonoBehaviour
         Dead
     }
 
-    Vector3 displacement, desiredVelocity, lookAt;
+    Vector3 displacement, lookAt;
     Rigidbody rb;
     public float Hp = 10;
-    [SerializeField] float moveSpeed = 500f, timescaleMulti = 0.5f, dodgeCooldown = 1f, dodgeDistance = 10f;
-    [SerializeField] GameObject melee, projectile;
+    [SerializeField] public float moveSpeed = 500f, timescaleMulti = 0.5f, dodgeCooldown = 1f, 
+                        dodgeDistance = 10f, chargeTime = 0.5f, maxCharge = 5f, minCharge = 0.75f;
+    [SerializeField] GameObject projectile;
     GameObject bossGO;
-    public float meleeTime, rangedTime, dodgeTime;
-    bool playerMelee, playerRanged, playerDodge, controlEnabled;
+    public float rangedTime, dodgeTime;
+    bool playerRanged, playerDodge, controlEnabled;
     public PlayerState playerState = PlayerState.Idle;
 
     // Start is called before the first frame update
@@ -31,21 +32,13 @@ public class PlayerController : MonoBehaviour
         bossGO = GameObject.FindWithTag("Boss");
     }
 
-    // void MeleeAttack()
-    // {
-    //     var newMelee = Instantiate(
-    //         melee, transform.position + transform.forward * meleeRange, transform.rotation
-    //         );
-    //     meleeTime = meleeCooldown;
-    //     Destroy(newMelee, meleeLifetime);
-    // }
-
     void RangedAttack()
     {
         if (rb.velocity != Vector3.zero)
             rb.velocity = Vector3.zero;
         if (lookAt == Vector3.zero)
             lookAt = new Vector3(0f, 0f, 0.00001f);
+        chargeTime += Time.deltaTime;
         playerState = PlayerState.Ranged;
         Time.timeScale = timescaleMulti;
         FaceStickDirection();
@@ -107,17 +100,8 @@ public class PlayerController : MonoBehaviour
     {
         controlEnabled = (playerState != PlayerState.Hurt && playerState != PlayerState.Dead);
 
-        // playerMelee = Input.GetButtonDown("Melee") && controlEnabled;
         playerRanged = Input.GetButton("Ranged") && controlEnabled;
         playerDodge = Input.GetButtonDown("Dodge") && controlEnabled;
-
-        // if (playerMelee && meleeTime <= 0)
-        // {
-        //     if (playerState == PlayerState.Idle || playerState == PlayerState.Move)
-        //     {
-        //         MeleeAttack();
-        //     }
-        // }
 
         if (playerRanged && rangedTime <= 0)
         {
@@ -126,6 +110,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonUp("Ranged") && controlEnabled && rangedTime <= 0)
         {
             Debug.Log("Button up");
+            if (chargeTime > maxCharge)
+                chargeTime = maxCharge;
             ShootProjectile();
             Time.timeScale = 1f;
             playerState = PlayerState.Idle;
@@ -137,7 +123,6 @@ public class PlayerController : MonoBehaviour
             playerState = PlayerState.Idle;
         }
 
-        meleeTime -= Time.deltaTime;
         rangedTime -= Time.deltaTime;
         dodgeTime -= Time.deltaTime;
     }

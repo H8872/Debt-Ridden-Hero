@@ -51,11 +51,15 @@ MonoBehaviour:
   wName: Bow
   description: Simple bow and arrow
   damage: 1
+  roundedDamage: 0
   speed: 700
   cooldown: 1
   lifetime: 1
-  isPiercing: 1
-  hasCollision: 1
+  isDestroyOnhit: 0
+  hasCollision: 0
+  chargeSpeed: 1
+  chargeDamage: 1
+  chargeSize: 1
   attackType: 0
 --- !u!33 &7417107274508312454
 MeshFilter:
