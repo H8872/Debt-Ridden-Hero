@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//the script is attached to the projectile/target of the attack
 public class BossAttackBehaviour : MonoBehaviour
 {
     enum AttackType 
@@ -11,7 +12,7 @@ public class BossAttackBehaviour : MonoBehaviour
         BeamRay
     }
     [SerializeField] AttackType attackType;
-    [SerializeField] float hitTime = 0.3f, speed = 1;
+    [SerializeField] float hitTime = 0.3f, speed = 1, damage = 1, knockBack = 1;
     public float hitDelay = 0;
     SphereCollider hitBox;
     ParticleSystem particles;
@@ -56,6 +57,14 @@ public class BossAttackBehaviour : MonoBehaviour
         if(particles.isStopped && hitTime<Time.time)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other) {
+        if(other.tag == "Player")
+        {
+            PlayerController player = other.GetComponent<PlayerController>();
+            player.GetHit(transform.position, damage, knockBack);
         }
     }
 }

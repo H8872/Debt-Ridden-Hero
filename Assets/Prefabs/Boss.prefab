@@ -250,7 +250,7 @@ MonoBehaviour:
   bossState: 0
   Slam: {fileID: 5615428268560012508, guid: 8319df29423317d4eb053d816bf748e3, type: 3}
   Projectile: {fileID: 4617941228959875964, guid: c1d94c662ceabfe4994af3af007be0d8, type: 3}
-  turningSpeed: 1
+  turningSpeed: 2
 --- !u!136 &8599042786719328813
 CapsuleCollider:
   m_ObjectHideFlags: 0

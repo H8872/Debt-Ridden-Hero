@@ -4991,6 +4991,8 @@ MonoBehaviour:
   attackType: 0
   hitTime: 0.3
   speed: 1
+  damage: 1
+  knockBack: 1000
   hitDelay: 0
 --- !u!54 &-3100729491787774047
 Rigidbody:

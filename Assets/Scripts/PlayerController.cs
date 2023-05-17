@@ -16,17 +16,20 @@ public class PlayerController : MonoBehaviour
 
     Vector3 displacement, desiredVelocity, lookAt;
     Rigidbody rb;
+    public float Hp = 10;
     [SerializeField] float moveSpeed = 500f, meleeRange = 1f, meleeLifetime = 0.5f, timescaleMulti = 0.5f,
                     projectileLifetime = 1f, dodgeCooldown = 1f, projectileCooldown = 1f, meleeCooldown = 0.5f, 
                     meleeTime, rangedTime, dodgeTime, dodgeDistance = 10f;
     [SerializeField] GameObject melee, projectile;
-    bool playerMelee, playerRanged, playerDodge;
+    GameObject bossGO;
+    bool playerMelee, playerRanged, playerDodge, controlEnabled;
     public PlayerState playerState = PlayerState.Idle;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        bossGO = GameObject.FindWithTag("Boss");
     }
 
     void MeleeAttack()
@@ -74,12 +77,40 @@ public class PlayerController : MonoBehaviour
         transform.forward = new Vector3(lookAt.x, 0, lookAt.z);
     }
 
+    public void GetHit(Vector3 direction, float damageTaken, float knockBackMultiplier)
+    {
+        Hp -= damageTaken;
+        if(Hp <= 0)
+        {
+            playerState = PlayerState.Dead;
+            return;
+        }
+        else
+            playerState = PlayerState.Hurt;
+        
+        Vector3 kbDirection = (transform.position-direction).normalized;
+        if(kbDirection == Vector3.zero)
+            kbDirection = (transform.position-bossGO.transform.position).normalized;
+        
+        displacement = -kbDirection;
+        FaceStickDirection();
+        rb.AddForce(kbDirection*knockBackMultiplier);
+        Invoke("CheckState", 0.5f);
+    }
+
+    void CheckState()
+    {
+        playerState = PlayerState.Idle;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        playerMelee = Input.GetButtonDown("Melee");
-        playerRanged = Input.GetButton("Ranged");
-        playerDodge = Input.GetButtonDown("Dodge");
+        controlEnabled = (playerState != PlayerState.Hurt && playerState != PlayerState.Dead);
+
+        playerMelee = Input.GetButtonDown("Melee") && controlEnabled;
+        playerRanged = Input.GetButton("Ranged") && controlEnabled;
+        playerDodge = Input.GetButtonDown("Dodge") && controlEnabled;
 
         if (playerMelee && meleeTime <= 0)
         {
@@ -93,7 +124,7 @@ public class PlayerController : MonoBehaviour
         {
             RangedAttack();
         }
-        if (Input.GetButtonUp("Ranged") && rangedTime <= 0)
+        if (Input.GetButtonUp("Ranged") && controlEnabled && rangedTime <= 0)
         {
             Debug.Log("Button up");
             ShootProjectile();

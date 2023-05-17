@@ -16,6 +16,7 @@ public class BossController : MonoBehaviour
     [SerializeField] GameObject Slam, Projectile;
     GameObject player;
     PlayerController pControl;
+    public float Hp;
     [SerializeField] float turningSpeed = 1;
     
     // Start is called before the first frame update
