@@ -3,14 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[Serializable]
-public class Weapon
+public class Weapon : MonoBehaviour
 {
-    public string name;
-    public bool melee;
-    public int damage;
-    public float range;
-    public float speed;
-    public float cooldown;
-    public string description;
+    [SerializeField] public string wName, description; 
+    [SerializeField] public int damage;
+    [SerializeField] public bool isMelee;
+    [SerializeField] public float range, speed, cooldown, lifetime;
+    PlayerController player;
+    [SerializeField] GameObject melee, ranged;
+
+    void Start()
+    {
+        player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+    }
+
+    public void Attack()
+    {
+        if (isMelee)
+        {
+            var newMelee = Instantiate(
+                melee, transform.position + transform.forward * range, transform.rotation
+                );
+            player.meleeTime = cooldown;
+            Destroy(newMelee, lifetime);
+        } else {
+            var newRanged = Instantiate(
+                ranged, transform.position + transform.forward, transform.rotation
+                );
+            player.rangedTime = cooldown;
+            Destroy(newRanged, lifetime);
+        }
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }
