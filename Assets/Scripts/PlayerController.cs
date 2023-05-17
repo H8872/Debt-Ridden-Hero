@@ -100,7 +100,8 @@ public class PlayerController : MonoBehaviour
 
     void CheckState()
     {
-        playerState = PlayerState.Idle;
+        if(playerState != PlayerState.Dead)
+            playerState = PlayerState.Idle;
     }
 
     // Update is called once per frame
