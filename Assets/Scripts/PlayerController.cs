@@ -14,15 +14,15 @@ public class PlayerController : MonoBehaviour
         Dead
     }
 
-    Vector3 displacement, desiredVelocity, lookAt;
+    Vector3 displacement, lookAt;
     Rigidbody rb;
     public float Hp = 10;
     [SerializeField] public float moveSpeed = 500f, timescaleMulti = 0.5f, dodgeCooldown = 1f, 
                         dodgeDistance = 10f, chargeTime = 0.5f, maxCharge = 5f, minCharge = 0.75f;
     [SerializeField] GameObject projectile;
     GameObject bossGO;
-    public float meleeTime, rangedTime, dodgeTime;
-    bool playerMelee, playerRanged, playerDodge, controlEnabled;
+    public float rangedTime, dodgeTime;
+    bool playerRanged, playerDodge, controlEnabled;
     public PlayerState playerState = PlayerState.Idle;
 
     // Start is called before the first frame update
@@ -31,15 +31,6 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         bossGO = GameObject.FindWithTag("Boss");
     }
-
-    // void MeleeAttack()
-    // {
-    //     var newMelee = Instantiate(
-    //         melee, transform.position + transform.forward * meleeRange, transform.rotation
-    //         );
-    //     meleeTime = meleeCooldown;
-    //     Destroy(newMelee, meleeLifetime);
-    // }
 
     void RangedAttack()
     {
@@ -109,22 +100,9 @@ public class PlayerController : MonoBehaviour
     {
         controlEnabled = (playerState != PlayerState.Hurt && playerState != PlayerState.Dead);
 
-        // playerMelee = Input.GetButtonDown("Melee") && controlEnabled;
         playerRanged = Input.GetButton("Ranged") && controlEnabled;
         playerDodge = Input.GetButtonDown("Dodge") && controlEnabled;
 
-        // if (playerMelee && meleeTime <= 0)
-        // {
-        //     if (playerState == PlayerState.Idle || playerState == PlayerState.Move)
-        //     {
-        //         MeleeAttack();
-        //     }
-        // }
-
-        // if (Input.GetButtonDown("Ranged") && controlEnabled && rangedTime <= 0)
-        // {    
-        //     timeNow = Time.time;
-        // }
         if (playerRanged && rangedTime <= 0)
         {
             RangedAttack();
@@ -145,7 +123,6 @@ public class PlayerController : MonoBehaviour
             playerState = PlayerState.Idle;
         }
 
-        meleeTime -= Time.deltaTime;
         rangedTime -= Time.deltaTime;
         dodgeTime -= Time.deltaTime;
     }
