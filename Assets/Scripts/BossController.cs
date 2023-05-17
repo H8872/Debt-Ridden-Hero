@@ -15,9 +15,10 @@ public class BossController : MonoBehaviour
     Transform eye;
     [SerializeField] GameObject Slam, Projectile;
     GameObject player;
+    List<Transform> shootPointsList = new List<Transform>();
     PlayerController pControl;
     public float Hp;
-    [SerializeField] float turningSpeed = 1;
+    [SerializeField] float turningSpeed = 1, shootPointsAmount = 1;
     
     // Start is called before the first frame update
     void Start()
@@ -25,7 +26,31 @@ public class BossController : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         pControl = player.GetComponent<PlayerController>();
         anim = GetComponent<Animator>();
-        eye = transform.GetChild(1);
+        eye = transform.Find("Eye");
+
+        RegenerateShootPoints();
+    }
+
+    void RegenerateShootPoints()
+    {
+        if(shootPointsList.Count > 0)
+        {
+            foreach (Transform point in shootPointsList)
+            {
+                shootPointsList.Remove(point);
+                Destroy(point.gameObject);
+            }
+        }
+        float pointAngle = 360f/shootPointsAmount;
+        for (int i = 0; i < shootPointsAmount; i++)
+        {
+            eye.Rotate(0,pointAngle,0);
+            Transform newShootPoint = Instantiate(eye.gameObject, eye.position + eye.forward * 2, eye.rotation).transform;
+            newShootPoint.SetParent(transform);
+            newShootPoint.position = new Vector3(newShootPoint.position.x, 1, newShootPoint.position.z);
+            newShootPoint.name = "Shootpoint" + i;
+            shootPointsList.Add(newShootPoint);
+        }
     }
 
     void PlayerTargetedSlamGround(float delay)
@@ -53,12 +78,30 @@ public class BossController : MonoBehaviour
 
     void ShootProjectile(int type)
     {
-        GameObject newProjectile = Instantiate(Projectile, transform.position + transform.forward * 2, transform.rotation);
-        if(newProjectile.GetComponent<BossAttackBehaviour>() == null)
+        GameObject newProjectile;
+        switch(type)
         {
-            Debug.LogWarning("Add BossAttackBehaviour script, thanks");
-            Destroy(newProjectile);
+            case 1:
+                foreach(Transform point in shootPointsList)
+                {
+                    newProjectile = Instantiate(Projectile, point.position, point.rotation);
+                    if(newProjectile.GetComponent<BossAttackBehaviour>() == null)
+                    {
+                        Debug.LogWarning("Add BossAttackBehaviour script, thanks");
+                        Destroy(newProjectile);
+                    }
+                }
+                break;
+            default:
+                newProjectile = Instantiate(Projectile, transform.position + transform.forward * 2, transform.rotation);
+                if(newProjectile.GetComponent<BossAttackBehaviour>() == null)
+                {
+                    Debug.LogWarning("Add BossAttackBehaviour script, thanks");
+                    Destroy(newProjectile);
+                }
+                break;
         }
+        
     }
 
     public void GetHit(int damage)
