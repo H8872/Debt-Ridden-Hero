@@ -19,9 +19,10 @@ public class PlayerController : MonoBehaviour
     public float Hp = 10;
     [SerializeField] float moveSpeed = 500f, meleeRange = 1f, meleeLifetime = 0.5f, timescaleMulti = 0.5f,
                     projectileLifetime = 1f, dodgeCooldown = 1f, projectileCooldown = 1f, meleeCooldown = 0.5f, 
-                    meleeTime, rangedTime, dodgeTime, dodgeDistance = 10f;
+                    dodgeDistance = 10f;
     [SerializeField] GameObject melee, projectile;
     GameObject bossGO;
+    public float meleeTime, rangedTime, dodgeTime;
     bool playerMelee, playerRanged, playerDodge, controlEnabled;
     public PlayerState playerState = PlayerState.Idle;
 
