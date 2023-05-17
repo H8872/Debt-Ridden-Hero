@@ -56,7 +56,7 @@ MonoBehaviour:
   cooldown: 1
   lifetime: 1
   isDestroyOnhit: 0
-  hasCollision: 0
+  hasCollision: 1
   chargeSpeed: 1
   chargeDamage: 1
   chargeSize: 1
