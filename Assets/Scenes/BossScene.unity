@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -462,6 +462,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3334499303326575016, guid: 64e99c3716cb204449936a1ab2090ef8, type: 3}
+      propertyPath: Hp
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3334499303326575016, guid: 64e99c3716cb204449936a1ab2090ef8, type: 3}
+      propertyPath: dodgeDistance
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3334499303326575017, guid: 64e99c3716cb204449936a1ab2090ef8, type: 3}
       propertyPath: m_Constraints
       value: 116
@@ -514,6 +522,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8260382296916757327, guid: 64e99c3716cb204449936a1ab2090ef8, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b03acd538e7155e40ab0fcb3a655cf19, type: 2}
+    - target: {fileID: 8260382296916757327, guid: 64e99c3716cb204449936a1ab2090ef8, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4232237266a79144800c7f3e960844c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64e99c3716cb204449936a1ab2090ef8, type: 3}
 --- !u!1001 &8599042786335306225
@@ -524,16 +540,84 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: Hp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: shootPointsAmount
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1764547553, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
-      propertyPath: m_Controller
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[0].delay
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[2].amount
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[3].amount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[4].amount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[5].amount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[1].attackName
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[2].attackName
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[3].attackName
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[4].attackName
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: AttackSequence.Array.data[5].attackName
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: <AttackSequence>k__BackingField.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: <AttackSequence>k__BackingField.Array.data[1].attackName
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: <AttackSequence>k__BackingField.Array.data[3].attackName
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3940228742992615462, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 9100000, guid: e8739fb2e9d073d4d984de052e2ece5e, type: 2}
+      objectReference: {fileID: 2100000, guid: 17fabe06149f434428114021f7b0e9f4, type: 2}
+    - target: {fileID: 3940228742992615462, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3f7c99e1604a4fd4bbd78ac43db26ab5, type: 2}
     - target: {fileID: 8599042786719328810, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: m_Name
       value: Boss
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599042786719328813, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
+      propertyPath: m_Center.y
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8599042786719328814, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: m_RootOrder

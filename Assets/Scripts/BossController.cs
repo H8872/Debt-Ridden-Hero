@@ -8,7 +8,8 @@ public class BossController : MonoBehaviour
         Idle,
         Attacking,
         Tracking,
-        Hurt
+        Hurt,
+        Dead
     }
     public BossState bossState;
     Animator anim;
@@ -16,8 +17,12 @@ public class BossController : MonoBehaviour
     [SerializeField] GameObject Slam, Projectile;
     GameObject player;
     List<Transform> shootPointsList = new List<Transform>();
+    [field: SerializeField] public BossAttackDefinition[] AttackSequence;
+    public float Hp, actDelay;
+    int currentAct = 0, attackInRow;
+    float attackHitDelay = 0f;
+
     PlayerController pControl;
-    public float Hp;
     [SerializeField] float turningSpeed = 1, shootPointsAmount = 1;
     
     // Start is called before the first frame update
@@ -29,18 +34,21 @@ public class BossController : MonoBehaviour
         eye = transform.Find("Eye");
 
         RegenerateShootPoints();
+        ActNextOnSequence();
     }
 
     void RegenerateShootPoints()
     {
         if(shootPointsList.Count > 0)
         {
-            foreach (Transform point in shootPointsList)
+            for (int i = shootPointsList.Count-1; i >= 0; i--)
             {
-                shootPointsList.Remove(point);
-                Destroy(point.gameObject);
+                GameObject p = shootPointsList[i].gameObject;
+                shootPointsList.RemoveAt(i);
+                Destroy(p);
             }
         }
+        eye.rotation = transform.rotation;
         float pointAngle = 360f/shootPointsAmount;
         for (int i = 0; i < shootPointsAmount; i++)
         {
@@ -53,31 +61,39 @@ public class BossController : MonoBehaviour
         }
     }
 
-    void PlayerTargetedSlamGround(float delay)
+    /* Types:
+    1: 
+    default/0: Player centered Slam
+    */
+    void SlamGround(int type = 0)
     {
-        SlamGround(player.transform.position, delay);
+        bossState = BossState.Attacking;
+        Vector3 target;
+        GameObject newSlam;
+        BossAttackBehaviour behaviour;
+        switch(type)
+        {
+            case 1:
+                break;
+            default:
+                target = player.transform.position;
+                // make sure the gameobject has BossAttackBehaviour script
+                newSlam = Instantiate(Slam, target, transform.rotation);
+                behaviour = newSlam.GetComponent<BossAttackBehaviour>();
+                behaviour.hitDelay = attackHitDelay;
+                break;
+        }
+        
     }
 
-    void SlamGround(Vector3 target, float delay = 0f)
+    /* Types:
+    1: Simultaneous Projectile from each of the shoot points
+    2: Shoot multiple in Projectiles in a row from different shoot points
+    default/0: Single Projectile from first shoot point
+    */
+    void ShootProjectile(int type = 0)
     {
-        if(target == Vector3.zero)
-            target = transform.position+Vector3.forward*2;
-        // make sure the gameobject has BossAttackBehaviour script
-        GameObject newSlam = Instantiate(Slam, target, transform.rotation);
-        BossAttackBehaviour behaviour = newSlam.GetComponent<BossAttackBehaviour>();
-        if(behaviour == null)
-        {
-            Debug.LogWarning("Add BossAttackBehaviour script, thanks");
-            Destroy(newSlam);
-        }
-        else
-        {
-            behaviour.hitDelay = delay;
-        }
-    }
-
-    void ShootProjectile(int type)
-    {
+        bossState = BossState.Attacking;
         GameObject newProjectile;
         switch(type)
         {
@@ -85,20 +101,14 @@ public class BossController : MonoBehaviour
                 foreach(Transform point in shootPointsList)
                 {
                     newProjectile = Instantiate(Projectile, point.position, point.rotation);
-                    if(newProjectile.GetComponent<BossAttackBehaviour>() == null)
-                    {
-                        Debug.LogWarning("Add BossAttackBehaviour script, thanks");
-                        Destroy(newProjectile);
-                    }
                 }
                 break;
+            case 2:
+                attackInRow--;
+                newProjectile = Instantiate(Projectile, shootPointsList[attackInRow].position, shootPointsList[attackInRow].rotation);
+                break;
             default:
-                newProjectile = Instantiate(Projectile, transform.position + transform.forward * 2, transform.rotation);
-                if(newProjectile.GetComponent<BossAttackBehaviour>() == null)
-                {
-                    Debug.LogWarning("Add BossAttackBehaviour script, thanks");
-                    Destroy(newProjectile);
-                }
+                newProjectile = Instantiate(Projectile, shootPointsList[0].position, shootPointsList[0].rotation);
                 break;
         }
         
@@ -108,6 +118,52 @@ public class BossController : MonoBehaviour
     {
         Hp -= damage;
         Debug.Log($"Ouch! My HP is {Hp}!");
+        if(Hp <= 0)
+            bossState = BossState.Dead;
+    }
+
+    void ActNextOnSequence()
+    {
+        bossState = BossState.Idle;
+        Debug.Log("Current Act: " + currentAct + " at " + Time.time);
+        if(AttackSequence.Length == currentAct)
+            currentAct = 0;
+        BossAttackDefinition actDefinition = AttackSequence[currentAct];
+        actDelay = actDefinition.delay;
+        if(actDelay > 0)
+            Invoke("ActNextOnSequence", actDelay);
+        
+        Debug.Log(actDelay);
+
+        switch(AttackSequence[currentAct].attackName)
+        {
+            case BossAttackDefinition.AttackName.Wait:
+                anim.Play("BossIdle");
+                actDelay = 0;
+                break;
+            case BossAttackDefinition.AttackName.PlayerCenteredSlam:
+                attackHitDelay = 1f;
+                anim.Play("BossPlayerCenteredSlam");
+                break;
+            case BossAttackDefinition.AttackName.SimultaneousProjectile:
+                shootPointsAmount = actDefinition.amount;
+                RegenerateShootPoints();
+                anim.Play("BossSimultaneousProjectile");
+                break;
+            case BossAttackDefinition.AttackName.SequenceProjectile:
+                shootPointsAmount = actDefinition.amount;
+                RegenerateShootPoints();
+                attackInRow = (int)actDefinition.amount;
+                anim.Play("BossSequenceProjectile");
+                break;
+            case BossAttackDefinition.AttackName.SimultanoeusSlamShower:
+                break;
+            case BossAttackDefinition.AttackName.SequenceSlamShower:
+                break;
+            default:
+                break;
+        }
+        currentAct++;
     }
 
     // Update is called once per frame
@@ -126,9 +182,14 @@ public class BossController : MonoBehaviour
                 Vector3 lookTo = Vector3.Scale(eye.rotation.eulerAngles, Vector3.up);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(lookTo), Time.deltaTime * turningSpeed);
                 break;
+            case BossState.Dead:
+                CancelInvoke("ActNextOnSequence");
+                break;
             default:
                 break;
         }
+
+
         if(pControl.playerState == PlayerController.PlayerState.Dead)
         {
             bossState = BossState.Idle;
