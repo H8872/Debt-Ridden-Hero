@@ -561,14 +561,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: AttackSequence.Array.data[3].amount
-      value: 3
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: AttackSequence.Array.data[4].amount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
-      propertyPath: AttackSequence.Array.data[5].amount
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
@@ -577,11 +573,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: AttackSequence.Array.data[2].attackName
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: AttackSequence.Array.data[3].attackName
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1764547552, guid: f4ecb4a94764783448f9c046e8630a80, type: 3}
       propertyPath: AttackSequence.Array.data[4].attackName

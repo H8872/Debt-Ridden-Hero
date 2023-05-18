@@ -67,7 +67,6 @@ public class BossController : MonoBehaviour
     */
     void SlamGround(int type = 0)
     {
-        bossState = BossState.Attacking;
         Vector3 target;
         GameObject newSlam;
         BossAttackBehaviour behaviour;
@@ -93,7 +92,6 @@ public class BossController : MonoBehaviour
     */
     void ShootProjectile(int type = 0)
     {
-        bossState = BossState.Attacking;
         GameObject newProjectile;
         switch(type)
         {
@@ -122,23 +120,41 @@ public class BossController : MonoBehaviour
             bossState = BossState.Dead;
     }
 
+    void SetState(int state)
+    {
+        switch(state)
+        {
+            case 0: 
+                bossState = BossState.Idle;
+                break;
+            case 1: 
+                bossState = BossState.Attacking;
+                break;
+            case 2: 
+                bossState = BossState.Tracking;
+                break;
+            case 3: 
+                bossState = BossState.Hurt;
+                break;
+            case 4: 
+                bossState = BossState.Dead;
+                break;
+        }
+    }
+
     void ActNextOnSequence()
     {
         bossState = BossState.Idle;
-        Debug.Log("Current Act: " + currentAct + " at " + Time.time);
         if(AttackSequence.Length == currentAct)
             currentAct = 0;
         BossAttackDefinition actDefinition = AttackSequence[currentAct];
         actDelay = actDefinition.delay;
-        if(actDelay > 0)
-            Invoke("ActNextOnSequence", actDelay);
-        
-        Debug.Log(actDelay);
 
         switch(AttackSequence[currentAct].attackName)
         {
             case BossAttackDefinition.AttackName.Wait:
                 anim.Play("BossIdle");
+                Invoke("ActNextOnSequence", actDelay);
                 actDelay = 0;
                 break;
             case BossAttackDefinition.AttackName.PlayerCenteredSlam:
@@ -151,6 +167,7 @@ public class BossController : MonoBehaviour
                 anim.Play("BossSimultaneousProjectile");
                 break;
             case BossAttackDefinition.AttackName.SequenceProjectile:
+                actDefinition.amount = 3;
                 shootPointsAmount = actDefinition.amount;
                 RegenerateShootPoints();
                 attackInRow = (int)actDefinition.amount;
