@@ -6,9 +6,9 @@ public class ProjectileController : MonoBehaviour
 {
     Rigidbody rb;
     SphereCollider sc;
-    [SerializeField] public string wName, description; 
-    [SerializeField] public int damage, roundedDamage;
-    [SerializeField] public float speed, cooldown, lifetime;
+    [SerializeField] public string wName, description;
+    [SerializeField] public float speed, cooldown, lifetime, damage, chargeDamageMulti = 1f, chargeSpeedMulti = 1f,
+                                    chargeScaleMulti = 1f;
     [SerializeField] public bool isDestroyOnhit, hasCollision, chargeSpeed, chargeDamage, chargeSize;
     PlayerController player;
 
@@ -25,7 +25,6 @@ public class ProjectileController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         sc = GetComponent<SphereCollider>();
         player = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
-        roundedDamage = Mathf.RoundToInt(damage * player.chargeTime);
         if (hasCollision)
         {
             sc.isTrigger = false;
@@ -36,14 +35,14 @@ public class ProjectileController : MonoBehaviour
         if (attackType == AttackType.Arrow)
         {
             if (chargeSpeed)
-                rb.AddForce(transform.forward * speed * player.chargeTime);
+                rb.AddForce(transform.forward * speed * player.chargeTime * chargeSpeedMulti);
             else
                 rb.AddForce(transform.forward * speed);
         }
 
         if (chargeSize)
         {
-            transform.localScale = transform.localScale * player.chargeTime;
+            transform.localScale = transform.localScale * player.chargeTime * chargeScaleMulti;
         }
         player.rangedTime = cooldown;
         KillSelf(lifetime);
@@ -59,7 +58,7 @@ public class ProjectileController : MonoBehaviour
     {
         if (chargeDamage)
         {
-            bossC.GetHit(roundedDamage);
+            bossC.GetHit(damage * player.chargeTime * chargeDamageMulti);
         } else {
             bossC.GetHit(damage);
         }

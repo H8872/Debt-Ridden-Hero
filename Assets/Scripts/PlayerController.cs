@@ -66,9 +66,13 @@ public class PlayerController : MonoBehaviour
     void ShootProjectile()
     {
         Debug.Log("Projectile shot");
+        if (chargeTime > maxCharge)
+            chargeTime = maxCharge;
         var newProjectile = Instantiate(
             projectile, transform.position + transform.forward, transform.rotation
             );
+        Time.timeScale = 1f;
+        chargeBar.SetChargeBarInactive();
     }
 
     void FaceStickDirection()
@@ -82,6 +86,14 @@ public class PlayerController : MonoBehaviour
 
     public void GetHit(Vector3 direction, float damageTaken, float knockBackMultiplier)
     {
+        if(playerState == PlayerState.Ranged)
+        {
+            chargeTime = minCharge;
+            Time.timeScale = 1f;
+            rangedTime = projectile.gameObject.GetComponent<ProjectileController>().cooldown;
+            chargeBar.SetChargeBarInactive();
+        }
+
         Hp -= damageTaken;
         healthBar.SetPlayerCurrentHealth(Hp);
         if(Hp <= 0)
@@ -92,6 +104,7 @@ public class PlayerController : MonoBehaviour
         else
             playerState = PlayerState.Hurt;
         
+
         Vector3 kbDirection = (transform.position-direction).normalized;
         if(kbDirection == Vector3.zero)
             kbDirection = (transform.position-bossGO.transform.position).normalized;
@@ -111,6 +124,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(playerState);
         controlEnabled = (playerState != PlayerState.Hurt && playerState != PlayerState.Dead);
 
         playerRanged = Input.GetButton("Ranged") && controlEnabled;
@@ -124,11 +138,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonUp("Ranged") && controlEnabled && rangedTime <= 0)
         {
             Debug.Log("Button up");
-            if (chargeTime > maxCharge)
-                chargeTime = maxCharge;
             ShootProjectile();
-            Time.timeScale = 1f;
-            chargeBar.SetChargeBarInactive();
             playerState = PlayerState.Idle;
         }
 

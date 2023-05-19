@@ -119,10 +119,10 @@ public class BossController : MonoBehaviour
         
     }
 
-    public void GetHit(int damage)
+    public void GetHit(float damage)
     {
         Hp -= damage;
-        bossHealthBar.SetBossCurrentHealth((int)Hp);
+        bossHealthBar.SetBossCurrentHealth(Hp);
         Debug.Log($"Ouch! My HP is {Hp}!");
         if(Hp <= 0)
             bossState = BossState.Dead;
