@@ -1173,8 +1173,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2850773987816706121, guid: 642043cd0a44928459cfb2c80ad107b9, type: 3}
+      propertyPath: eatCost
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2850773987816706121, guid: 642043cd0a44928459cfb2c80ad107b9, type: 3}
       propertyPath: debtPaid
       value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 2850773987816706121, guid: 642043cd0a44928459cfb2c80ad107b9, type: 3}
+      propertyPath: healCost
+      value: 999
       objectReference: {fileID: 0}
     - target: {fileID: 2850773987816706121, guid: 642043cd0a44928459cfb2c80ad107b9, type: 3}
       propertyPath: dayNumber
@@ -1186,7 +1194,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2850773987816706121, guid: 642043cd0a44928459cfb2c80ad107b9, type: 3}
       propertyPath: playerDied
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2850773987816706121, guid: 642043cd0a44928459cfb2c80ad107b9, type: 3}
+      propertyPath: hospitalCost
+      value: 103
       objectReference: {fileID: 0}
     - target: {fileID: 2850773987816706121, guid: 642043cd0a44928459cfb2c80ad107b9, type: 3}
       propertyPath: previousDebt

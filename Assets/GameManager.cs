@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     GameObject player, boss;
     public float totalDebt = 1000000f, previousDebt = 1000000f, debtPaid, debtGained,
-                dayNumber, maxDays = 5f;
+                dayNumber, maxDays = 5f, healCost, eatCost, hospitalCost;
     [SerializeField] string currentScene;
     public bool playerDied = false;
 
@@ -39,6 +39,20 @@ public class GameManager : MonoBehaviour
             player = GameObject.FindWithTag("Player");
 
         currentScene = SceneManager.GetActiveScene().name;
+    }
+
+    public void InitializeToDefaultValues()
+    {
+        totalDebt = 100000f;
+        previousDebt = totalDebt;
+        debtPaid = 0;
+        debtGained = 0;
+        dayNumber = 0;
+        maxDays = 5f;
+        healCost = 2000f;
+        eatCost = 1000f;
+        hospitalCost = 7500f;
+        playerDied = false;
     }
 
     public void AddDebt(float amount)

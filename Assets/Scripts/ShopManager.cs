@@ -7,8 +7,7 @@ using UnityEngine.UI;
 public class ShopManager : MonoBehaviour
 {
     Transform canvas;
-    public float healCost, eatCost, hospitalCost;
-    [SerializeField] float previousDebt, tempDebt, totalDebt;
+    [SerializeField] float previousDebt, tempDebt, totalDebt, healCost, eatCost, hospitalCost;
     TextMeshProUGUI summaryTitle, previousDebtText, bountyText, additionalText,
                     healAmountText, eatAmountText, debtRemainingText, totalDebtText,
                     hospitalVisitText, hospitalVisitAmountText;
@@ -21,7 +20,12 @@ public class ShopManager : MonoBehaviour
         GameManager.instance.dayNumber++;
         totalDebt = GameManager.instance.totalDebt;
         previousDebt = GameManager.instance.previousDebt;
+        healCost = GameManager.instance.healCost;
+        eatCost = GameManager.instance.eatCost;
+        hospitalCost = GameManager.instance.hospitalCost;
+
         canvas = GameObject.Find("Canvas").transform;
+
         summaryTitle = canvas.Find("DaySummary").GetComponent<TextMeshProUGUI>();
         summaryTitle.text = $"Day {GameManager.instance.dayNumber} of {GameManager.instance.maxDays} Summary";
         previousDebtText = canvas.Find("PreviousDebtAmount").GetComponent<TextMeshProUGUI>();
@@ -49,6 +53,7 @@ public class ShopManager : MonoBehaviour
         debtRemainingText = canvas.Find("DebtRemainingAmount").GetComponent<TextMeshProUGUI>();
         totalDebtText = canvas.Find("TotalDebtAmount").GetComponent<TextMeshProUGUI>();
         progress = canvas.Find("Progress").GetComponent<Slider>();
+
 
         RecalculateDebt();
         RefreshTextValues();
