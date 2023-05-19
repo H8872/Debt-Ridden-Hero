@@ -209,6 +209,8 @@ public class BossController : MonoBehaviour
 
         if(pControl.playerState == PlayerController.PlayerState.Dead)
         {
+            if(bossState != BossState.Idle)
+                anim.Play("BossIdle");
             bossState = BossState.Idle;
         }
         // Debug.Log(Time.time);
