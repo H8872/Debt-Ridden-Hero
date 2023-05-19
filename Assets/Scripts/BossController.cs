@@ -40,7 +40,7 @@ public class BossController : MonoBehaviour
 
         RegenerateShootPoints();
         ActNextOnSequence();
-        bossHealthBar.SetBossMaxHealth((int)Hp);
+        bossHealthBar.SetBossMaxHealth(Hp);
         bossHealthBar.SetHealthBarActive();
     }
 
