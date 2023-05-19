@@ -50,11 +50,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wName: Bow
   description: Simple bow and arrow
-  damage: 1
-  roundedDamage: 0
   speed: 700
   cooldown: 1
   lifetime: 1
+  damage: 1
+  chargeDamageMulti: 5
+  chargeSpeedMulti: 1
+  chargeScaleMulti: 1
   isDestroyOnhit: 0
   hasCollision: 1
   chargeSpeed: 1

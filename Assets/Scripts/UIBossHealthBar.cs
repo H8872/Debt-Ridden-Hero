@@ -28,13 +28,13 @@ public class UIBossHealthBar : MonoBehaviour
         slider.gameObject.SetActive(false);
     }
 
-    public void SetBossMaxHealth(int maxHealth)
+    public void SetBossMaxHealth(float maxHealth)
     {
         slider.maxValue = maxHealth;
         slider.value = maxHealth;
     }
 
-    public void SetBossCurrentHealth(int health)
+    public void SetBossCurrentHealth(float health)
     {
         slider.value = health;
     }
