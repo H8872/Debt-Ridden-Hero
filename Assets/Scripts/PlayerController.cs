@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         bossGO = GameObject.FindWithTag("Boss");
+        GameManager.instance.SetGameState(GameManager.GameState.Playing);
     }
 
     void RangedAttack()

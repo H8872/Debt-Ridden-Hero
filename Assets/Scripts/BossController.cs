@@ -18,7 +18,7 @@ public class BossController : MonoBehaviour
     GameObject player;
     List<Transform> shootPointsList = new List<Transform>();
     [field: SerializeField] public BossAttackDefinition[] AttackSequence;
-    public float Hp, actDelay;
+    public float Hp, actAmount;
     int currentAct = 0, attackInRow;
     float attackHitDelay = 0f;
 
@@ -148,14 +148,14 @@ public class BossController : MonoBehaviour
         if(AttackSequence.Length == currentAct)
             currentAct = 0;
         BossAttackDefinition actDefinition = AttackSequence[currentAct];
-        actDelay = actDefinition.delay;
+        actAmount = actDefinition.amount;
 
         switch(AttackSequence[currentAct].attackName)
         {
             case BossAttackDefinition.AttackName.Wait:
                 anim.Play("BossIdle");
-                Invoke("ActNextOnSequence", actDelay);
-                actDelay = 0;
+                Invoke("ActNextOnSequence", actAmount);
+                actAmount = 0;
                 break;
             case BossAttackDefinition.AttackName.PlayerCenteredSlam:
                 attackHitDelay = 1f;
