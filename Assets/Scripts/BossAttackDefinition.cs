@@ -16,6 +16,5 @@ public class BossAttackDefinition
         SequenceSlamShower
     }
     public AttackName attackName;
-    public float delay;
     public float amount;
 }

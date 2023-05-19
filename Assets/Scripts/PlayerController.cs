@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         bossGO = GameObject.FindWithTag("Boss");
+        GameManager.instance.SetGameState(GameManager.GameState.Playing);
         chargeBar.SetChargeBarValues(maxCharge, minCharge);
         healthBar.SetPlayerMaxHealth(Hp);
         healthBar.SetPlayerCurrentHealth(Hp);
