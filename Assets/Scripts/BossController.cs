@@ -22,9 +22,14 @@ public class BossController : MonoBehaviour
     int currentAct = 0, attackInRow;
     float attackHitDelay = 0f;
 
+    UIBossHealthBar bossHealthBar;
     PlayerController pControl;
     [SerializeField] float turningSpeed = 1, shootPointsAmount = 1;
     
+    void Awake() 
+    {
+        bossHealthBar = FindObjectOfType<UIBossHealthBar>();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +40,8 @@ public class BossController : MonoBehaviour
 
         RegenerateShootPoints();
         ActNextOnSequence();
+        bossHealthBar.SetBossMaxHealth((int)Hp);
+        bossHealthBar.SetHealthBarActive();
     }
 
     void RegenerateShootPoints()
@@ -115,6 +122,7 @@ public class BossController : MonoBehaviour
     public void GetHit(int damage)
     {
         Hp -= damage;
+        bossHealthBar.SetBossCurrentHealth((int)Hp);
         Debug.Log($"Ouch! My HP is {Hp}!");
         if(Hp <= 0)
             bossState = BossState.Dead;
