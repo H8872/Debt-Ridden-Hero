@@ -23,17 +23,24 @@ public class PlayerController : MonoBehaviour
     GameObject bossGO;
     public float rangedTime, dodgeTime;
     bool playerRanged, playerDodge, controlEnabled;
+    UIPlayerChargeBar chargeBar;
     public PlayerState playerState = PlayerState.Idle;
 
+    void Awake() 
+    {
+        chargeBar = FindObjectOfType<UIPlayerChargeBar>();
+    }
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         bossGO = GameObject.FindWithTag("Boss");
+        chargeBar.SetChargeBarValues(maxCharge, minCharge);
     }
 
     void RangedAttack()
     {
+        chargeBar.SetCurrentBarValue(chargeTime);
         if (rb.velocity != Vector3.zero)
             rb.velocity = Vector3.zero;
         if (lookAt == Vector3.zero)
@@ -105,6 +112,7 @@ public class PlayerController : MonoBehaviour
 
         if (playerRanged && rangedTime <= 0)
         {
+            chargeBar.SetChargeBarActive();
             RangedAttack();
         }
         if (Input.GetButtonUp("Ranged") && controlEnabled && rangedTime <= 0)
@@ -114,6 +122,7 @@ public class PlayerController : MonoBehaviour
                 chargeTime = maxCharge;
             ShootProjectile();
             Time.timeScale = 1f;
+            chargeBar.SetChargeBarInactive();
             playerState = PlayerState.Idle;
         }
 
