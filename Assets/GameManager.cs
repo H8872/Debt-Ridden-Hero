@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     GameObject player, boss;
     public float totalDebt = 1000000f, previousDebt = 1000000f, debtPaid, debtGained,
-                dayNumber, maxDays = 7f;
+                dayNumber, maxDays = 5f;
     [SerializeField] string currentScene;
     public bool playerDied = false;
 
@@ -71,6 +71,8 @@ public class GameManager : MonoBehaviour
         if(state != gameState)
         {
             gameState = state;
+            player = null;
+            boss = null;
             if(gameState == GameState.Playing)
             {
                 player = GameObject.FindWithTag("Player");
@@ -78,13 +80,11 @@ public class GameManager : MonoBehaviour
             }
             else if(gameState == GameState.MainMenu)
             {
-                player = null;
-                boss = null;
+
             }
             else if(gameState == GameState.Shop)
             {
-                player = null;
-                boss = null;
+
             }
         }
         else
