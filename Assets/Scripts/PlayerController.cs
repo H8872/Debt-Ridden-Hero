@@ -24,11 +24,13 @@ public class PlayerController : MonoBehaviour
     public float rangedTime, dodgeTime;
     bool playerRanged, playerDodge, controlEnabled;
     UIPlayerChargeBar chargeBar;
+    UIPlayerHealthBar healthBar;
     public PlayerState playerState = PlayerState.Idle;
 
     void Awake() 
     {
         chargeBar = FindObjectOfType<UIPlayerChargeBar>();
+        healthBar = FindObjectOfType<UIPlayerHealthBar>();
     }
     // Start is called before the first frame update
     void Start()
@@ -36,6 +38,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         bossGO = GameObject.FindWithTag("Boss");
         chargeBar.SetChargeBarValues(maxCharge, minCharge);
+        healthBar.SetPlayerMaxHealth(Hp);
+        healthBar.SetPlayerCurrentHealth(Hp);
     }
 
     void RangedAttack()
@@ -78,6 +82,7 @@ public class PlayerController : MonoBehaviour
     public void GetHit(Vector3 direction, float damageTaken, float knockBackMultiplier)
     {
         Hp -= damageTaken;
+        healthBar.SetPlayerCurrentHealth(Hp);
         if(Hp <= 0)
         {
             playerState = PlayerState.Dead;
