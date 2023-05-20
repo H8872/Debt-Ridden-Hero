@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class ShopManager : MonoBehaviour
 {
     Transform canvas;
+    CanvasGroup fadeToWhiteGroup;
     [SerializeField] float previousDebt, tempDebt, totalDebt, healCost, eatCost, hospitalCost;
     TextMeshProUGUI summaryTitle, previousDebtText, bountyText, additionalText,
                     healAmountText, eatAmountText, debtRemainingText, totalDebtText,
@@ -17,6 +18,9 @@ public class ShopManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameManager.instance.SetGameState(GameManager.GameState.Shop);
+        StartCoroutine(GameManager.instance.FadeOpacityTo(0,2));
+
         GameManager.instance.dayNumber++;
         totalDebt = GameManager.instance.totalDebt;
         previousDebt = GameManager.instance.previousDebt;
@@ -25,6 +29,7 @@ public class ShopManager : MonoBehaviour
         hospitalCost = GameManager.instance.hospitalCost;
 
         canvas = GameObject.Find("Canvas").transform;
+        fadeToWhiteGroup = GameObject.Find("FadeToWhite").GetComponent<CanvasGroup>();
 
         summaryTitle = canvas.Find("DaySummary").GetComponent<TextMeshProUGUI>();
         summaryTitle.text = $"Day {GameManager.instance.dayNumber} of {GameManager.instance.maxDays} Summary";
@@ -38,6 +43,8 @@ public class ShopManager : MonoBehaviour
         healAmountText.text = healCost.ToString("N0") + "g";
         healToggle = canvas.Find("HealWoundsToggle").GetComponent<Toggle>();
         healToggle.isOn = true;
+        if(GameManager.instance.playerDied)
+            healToggle.interactable = false;
         eatAmountText = canvas.Find("EatFoodAmount").GetComponent<TextMeshProUGUI>();
         eatAmountText.text = eatCost.ToString("N0") + "g";
         eatToggle = canvas.Find("EatFoodToggle").GetComponent<Toggle>();
@@ -95,20 +102,26 @@ public class ShopManager : MonoBehaviour
         if(tempDebt == 0)
         {
             // Debt paid! Win the game!
-            Debug.Log("Win :)");
+            fadeToWhiteGroup.transform.GetComponent<Image>().color = Color.white;
+            GameManager.instance.SwitchScene("WinScene");
         }
         else if(tempDebt > 0 && GameManager.instance.dayNumber == GameManager.instance.maxDays)
         {
             // Couldn't pay off debt before max days
-            Debug.Log("Lose :(");
+            GameManager.instance.SwitchScene("LoseScene");
         }
         else
         {
             // Proceed to the next day
-            Debug.Log("Proceed to next day");
+            if(healToggle.isOn)
+                GameManager.instance.playerHp = 20;
+            if(eatToggle.isOn)
+                GameManager.instance.playerEat = true;
             previousDebt = tempDebt;
             GameManager.instance.debtGained = 0;
             GameManager.instance.debtPaid = 0;
+            GameManager.instance.SwitchScene("BossScene");
         }
     }
+
 }

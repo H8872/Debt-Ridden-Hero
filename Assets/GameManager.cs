@@ -8,17 +8,19 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public enum GameState{
-        MainMenu,
+        Menu,
         Playing,
         Shop
     }
     public GameState gameState;
+    CanvasGroup fadeToWhiteGroup;
 
     GameObject player, boss;
-    public float totalDebt = 1000000f, previousDebt = 1000000f, debtPaid, debtGained,
-                dayNumber, maxDays = 5f, healCost, eatCost, hospitalCost;
+    public float totalDebt = 100000f, previousDebt = 100000f, debtPaid, debtGained,
+                dayNumber, maxDays = 5f, healCost, eatCost, hospitalCost, playerHp = 20, playerMaxHp = 20;
     [SerializeField] string currentScene;
-    public bool playerDied = false;
+    public bool playerDied = false, playerEat = false;
+    
 
     private void Awake()
     {
@@ -29,12 +31,13 @@ public class GameManager : MonoBehaviour
         }
         else
             instance = this;
+        
+        DontDestroyOnLoad(gameObject);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
         if(gameState == GameState.Playing)
             player = GameObject.FindWithTag("Player");
 
@@ -45,6 +48,8 @@ public class GameManager : MonoBehaviour
     {
         totalDebt = 100000f;
         previousDebt = totalDebt;
+        playerMaxHp = 20;
+        playerHp = playerMaxHp;
         debtPaid = 0;
         debtGained = 0;
         dayNumber = 0;
@@ -53,6 +58,7 @@ public class GameManager : MonoBehaviour
         eatCost = 1000f;
         hospitalCost = 7500f;
         playerDied = false;
+        playerEat = true;
     }
 
     public void AddDebt(float amount)
@@ -73,8 +79,8 @@ public class GameManager : MonoBehaviour
     {
         if(currentScene != sceneName)
         {
-            SceneManager.LoadScene(sceneName);
             currentScene = sceneName;
+            StartCoroutine(FadeOpacityTo(1,2,true));
         }
         else
             Debug.LogWarning($"Do not load the same scene. ({sceneName})");
@@ -85,6 +91,9 @@ public class GameManager : MonoBehaviour
         if(state != gameState)
         {
             gameState = state;
+            fadeToWhiteGroup = GameObject.Find("FadeToWhite").GetComponent<CanvasGroup>();
+            if(fadeToWhiteGroup == null)
+                Debug.LogWarning("Add FadeToWhite CanvasGroup, thanks");
             player = null;
             boss = null;
             if(gameState == GameState.Playing)
@@ -92,7 +101,7 @@ public class GameManager : MonoBehaviour
                 player = GameObject.FindWithTag("Player");
                 boss = GameObject.FindWithTag("Boss");
             }
-            else if(gameState == GameState.MainMenu)
+            else if(gameState == GameState.Menu)
             {
 
             }
@@ -106,10 +115,24 @@ public class GameManager : MonoBehaviour
             Debug.LogWarning($"GameState is already {state}");
         }
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    public IEnumerator FadeOpacityTo(float opacity, float seconds = 1f, bool switchScene = false)
     {
-        
+        fadeToWhiteGroup = GameObject.Find("FadeToWhite").GetComponent<CanvasGroup>();
+        fadeToWhiteGroup.blocksRaycasts = true;
+        float initialAlpha = fadeToWhiteGroup.alpha;
+        float elapsedTime = 0f;
+
+        while (fadeToWhiteGroup.alpha != opacity && elapsedTime < seconds)
+        {
+            fadeToWhiteGroup.alpha = Mathf.Lerp(initialAlpha, opacity, elapsedTime / seconds);
+
+            yield return null;
+            elapsedTime += Time.deltaTime;
+        }
+        fadeToWhiteGroup.alpha = opacity;
+        fadeToWhiteGroup.blocksRaycasts = false;
+        if(switchScene)
+            SceneManager.LoadScene(currentScene);
     }
 }

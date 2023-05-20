@@ -10,8 +10,6 @@ public class MenuManager : MonoBehaviour
         Win
     }
     [SerializeField] MenuType menuType;
-
-    bool quitConfirm = false;
     int currentScreen = 0;
     Transform canvas;
 
@@ -19,6 +17,8 @@ public class MenuManager : MonoBehaviour
     void Start()
     {
         canvas = GameObject.Find("Canvas").transform;
+
+        GameManager.instance.SetGameState(GameManager.GameState.Menu);
     }
 
     public void GoToMain()
@@ -44,11 +44,16 @@ public class MenuManager : MonoBehaviour
     {
         canvas.GetChild(currentScreen).gameObject.SetActive(false);
         currentScreen = 1;
+        canvas.GetChild(currentScreen).gameObject.SetActive(true);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartGame()
     {
-        
+        GameManager.instance.SwitchScene("BossScene");
+    }
+
+    public void SetDefaultSettings()
+    {
+        GameManager.instance.InitializeToDefaultValues();
     }
 }

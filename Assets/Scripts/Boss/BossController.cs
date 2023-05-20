@@ -81,6 +81,7 @@ public class BossController : MonoBehaviour
         {
             case 1:
                 break;
+            case 0:
             default:
                 target = player.transform.position;
                 // make sure the gameobject has BossAttackBehaviour script
@@ -112,6 +113,7 @@ public class BossController : MonoBehaviour
                 attackInRow--;
                 newProjectile = Instantiate(Projectile, shootPointsList[attackInRow].position, shootPointsList[attackInRow].rotation);
                 break;
+            case 0:
             default:
                 newProjectile = Instantiate(Projectile, shootPointsList[0].position, shootPointsList[0].rotation);
                 break;
@@ -125,9 +127,14 @@ public class BossController : MonoBehaviour
         bossHealthBar.SetBossCurrentHealth(Hp);
         Debug.Log($"Ouch! My HP is {Hp}!");
         if(Hp <= 0)
+        {
             bossState = BossState.Dead;
+            anim.Play("BossDie");
+            GameObject.FindAnyObjectByType<BossSceneManager>().BossEnd(true);
+        }
     }
 
+    // For animations
     void SetState(int state)
     {
         switch(state)

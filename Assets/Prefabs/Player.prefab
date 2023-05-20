@@ -124,17 +124,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acd9cbdf45c95c441a849b7934ff015a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Hp: 10
+  MaxHp: 20
+  Hp: 20
+  debt: 0
   moveSpeed: 500
   timescaleMulti: 0.5
   dodgeCooldown: 1
-  dodgeDistance: 10
+  dodgeDistance: 5
   chargeTime: 0.5
-  maxCharge: 5
-  minCharge: 0.75
+  maxCharge: 1
+  minCharge: 0.5
   projectile: {fileID: 5151624033488770561, guid: de0755448749a3b43a4db6ba87b22699, type: 3}
   rangedTime: 0
   dodgeTime: 0
+  hasEaten: 0
+  wasHealed: 0
   playerState: 0
 --- !u!136 &3334499303326575020
 CapsuleCollider:
@@ -269,7 +273,7 @@ GameObject:
   - component: {fileID: 1194136962820151705}
   - component: {fileID: 7375964421434781906}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: HpCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -552,6 +556,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BunHero
       objectReference: {fileID: 0}
+    - target: {fileID: 1630794972795428178, guid: 474193d85025e594897674ae580ce018, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b03acd538e7155e40ab0fcb3a655cf19, type: 2}
+    - target: {fileID: 1630794972795428178, guid: 474193d85025e594897674ae580ce018, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: f4232237266a79144800c7f3e960844c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 474193d85025e594897674ae580ce018, type: 3}
 --- !u!4 &7172479322843623926 stripped

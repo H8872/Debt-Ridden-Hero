@@ -16,12 +16,13 @@ public class PlayerController : MonoBehaviour
 
     Vector3 displacement, lookAt;
     Rigidbody rb;
-    public float Hp = 10;
+    public float MaxHp = 20, Hp = 20, debt = 0;
     [SerializeField] public float moveSpeed = 500f, timescaleMulti = 0.5f, dodgeCooldown = 1f, 
                         dodgeDistance = 10f, chargeTime = 0.5f, maxCharge = 5f, minCharge = 0.75f;
     [SerializeField] GameObject projectile;
     GameObject bossGO;
     public float rangedTime, dodgeTime;
+    public bool hasEaten, wasHealed;
     bool playerRanged, playerDodge, controlEnabled;
     UIPlayerChargeBar chargeBar;
     UIPlayerHealthBar healthBar;
@@ -38,8 +39,16 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         bossGO = GameObject.FindWithTag("Boss");
         GameManager.instance.SetGameState(GameManager.GameState.Playing);
+        
+        Hp = GameManager.instance.playerHp;
+        if(!GameManager.instance.playerEat)
+        {
+            minCharge = 0.1f;
+            maxCharge = 0.75f;
+        }
+
         chargeBar.SetChargeBarValues(maxCharge, minCharge);
-        healthBar.SetPlayerMaxHealth(Hp);
+        healthBar.SetPlayerMaxHealth(MaxHp);
         healthBar.SetPlayerCurrentHealth(Hp);
     }
 
@@ -66,6 +75,7 @@ public class PlayerController : MonoBehaviour
     void ShootProjectile()
     {
         Debug.Log("Projectile shot");
+        debt += 5;
         if (chargeTime > maxCharge)
             chargeTime = maxCharge;
         var newProjectile = Instantiate(
@@ -99,6 +109,7 @@ public class PlayerController : MonoBehaviour
         if(Hp <= 0)
         {
             playerState = PlayerState.Dead;
+            GameObject.FindAnyObjectByType<BossSceneManager>().BossEnd(false);
             return;
         }
         else

@@ -44,3 +44,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78d1e8bad940b894884112020a0a319a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameState: 0
+  totalDebt: 100000
+  previousDebt: 100000
+  debtPaid: 0
+  debtGained: 0
+  dayNumber: 0
+  maxDays: 5
+  healCost: 2000
+  eatCost: 1000
+  hospitalCost: 7500
+  playerHp: 20
+  playerMaxHp: 20
+  currentScene: 
+  playerDied: 0
+  playerEat: 1
