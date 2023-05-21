@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 
     Vector3 displacement, lookAt;
     Rigidbody rb;
+    Animator anim;
     public float MaxHp = 20, Hp = 20, debt = 0;
     [SerializeField] public float moveSpeed = 500f, timescaleMulti = 0.5f, dodgeCooldown = 1f, 
                         dodgeDistance = 10f, chargeTime = 0.5f, maxCharge = 5f, minCharge = 0.75f;
@@ -37,6 +38,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        anim = transform.GetChild(0).GetComponent<Animator>();
         bossGO = GameObject.FindWithTag("Boss");
         GameManager.instance.SetGameState(GameManager.GameState.Playing);
         
@@ -54,12 +56,14 @@ public class PlayerController : MonoBehaviour
 
     void RangedAttack()
     {
+        anim.Play("ChargeBow");
         chargeBar.SetCurrentBarValue(chargeTime);
         if (rb.velocity != Vector3.zero)
             rb.velocity = Vector3.zero;
         if (lookAt == Vector3.zero)
             lookAt = new Vector3(0f, 0f, 0.00001f);
         chargeTime += Time.deltaTime;
+        anim.SetFloat("ChargeTime", Mathf.Lerp(0, maxCharge, chargeTime)/maxCharge);
         playerState = PlayerState.Ranged;
         Time.timeScale = timescaleMulti;
         FaceStickDirection();
@@ -67,6 +71,7 @@ public class PlayerController : MonoBehaviour
 
     void Dodge()
     {
+        anim.Play("PlayerDodge");
         playerState = PlayerState.Dodge;
         transform.position += transform.forward * dodgeDistance;
         dodgeTime = dodgeCooldown;
@@ -75,6 +80,7 @@ public class PlayerController : MonoBehaviour
     void ShootProjectile()
     {
         Debug.Log("Projectile shot");
+        anim.Play("PlayerIdle");
         debt += 5;
         if (chargeTime > maxCharge)
             chargeTime = maxCharge;
@@ -108,12 +114,16 @@ public class PlayerController : MonoBehaviour
         healthBar.SetPlayerCurrentHealth(Hp);
         if(Hp <= 0)
         {
+            anim.Play("PlayerDead");
             playerState = PlayerState.Dead;
             GameObject.FindAnyObjectByType<BossSceneManager>().BossEnd(false);
             return;
         }
         else
+        {
             playerState = PlayerState.Hurt;
+            anim.Play("PlayerHurt");
+        }
         
 
         Vector3 kbDirection = (transform.position-direction).normalized;
@@ -179,8 +189,10 @@ public class PlayerController : MonoBehaviour
             {
                 FaceStickDirection();
                 playerState = PlayerState.Move;
+                anim.SetBool("Moving", true);
             } else {
                 playerState = PlayerState.Idle;
+                anim.SetBool("Moving", false);
             }
         }
     }
