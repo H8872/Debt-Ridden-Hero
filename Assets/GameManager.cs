@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     CanvasGroup fadeToWhiteGroup;
 
     GameObject player, boss;
-    public float totalDebt = 100000f, previousDebt = 100000f, debtPaid, debtGained,
+    public float totalDebt = 100000f, previousDebt = 100000f, debtPaid, debtGained, arrowCost = 5,
                 dayNumber, maxDays = 5f, healCost, eatCost, hospitalCost, playerHp = 20, playerMaxHp = 20;
     [SerializeField] string currentScene;
     public bool playerDied = false, playerEat = false;
@@ -46,17 +46,18 @@ public class GameManager : MonoBehaviour
 
     public void InitializeToDefaultValues()
     {
-        totalDebt = 100000f;
+        totalDebt = 30000f;
         previousDebt = totalDebt;
         playerMaxHp = 20;
         playerHp = playerMaxHp;
         debtPaid = 0;
         debtGained = 0;
         dayNumber = 0;
-        maxDays = 5f;
+        maxDays = 3f;
         healCost = 2000f;
         eatCost = 1000f;
         hospitalCost = 7500f;
+        arrowCost = 5f;
         playerDied = false;
         playerEat = true;
     }
@@ -79,6 +80,8 @@ public class GameManager : MonoBehaviour
     {
         if(currentScene != sceneName)
         {
+            if(sceneName == "BossScene")
+                sceneName += dayNumber;
             currentScene = sceneName;
             StartCoroutine(FadeOpacityTo(1,2,true));
         }

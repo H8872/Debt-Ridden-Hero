@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
     UIPlayerChargeBar chargeBar;
     UIPlayerHealthBar healthBar;
     public PlayerState playerState = PlayerState.Idle;
+    BossSceneManager bossScene;
 
     void Awake() 
     {
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         anim = transform.GetChild(0).GetComponent<Animator>();
         bossGO = GameObject.FindWithTag("Boss");
+        bossScene = GameObject.Find("BossSceneManager").GetComponent<BossSceneManager>();
         GameManager.instance.SetGameState(GameManager.GameState.Playing);
         
         Hp = GameManager.instance.playerHp;
@@ -81,7 +83,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Projectile shot");
         anim.Play("PlayerIdle");
-        debt += 5;
+        debt += GameManager.instance.arrowCost;
         if (chargeTime > maxCharge)
             chargeTime = maxCharge;
         var newProjectile = Instantiate(
@@ -146,7 +148,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Debug.Log(playerState);
-        controlEnabled = (playerState != PlayerState.Hurt && playerState != PlayerState.Dead);
+        controlEnabled = (playerState != PlayerState.Hurt && playerState != PlayerState.Dead && !bossScene.Paused);
 
         playerRanged = Input.GetButton("Ranged") && controlEnabled;
         playerDodge = Input.GetButtonDown("Dodge") && controlEnabled;

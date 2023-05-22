@@ -17,6 +17,7 @@ public class BossAttackBehaviour : MonoBehaviour
     SphereCollider hitBox;
     ParticleSystem particles;
     Rigidbody rb;
+    MeshRenderer mesh, warningMesh;
 
     // Start is called before the first frame update
     void Start()
@@ -26,14 +27,18 @@ public class BossAttackBehaviour : MonoBehaviour
         hitBox = GetComponentInChildren<SphereCollider>();
         particles = GetComponentInChildren<ParticleSystem>();
         rb = GetComponent<Rigidbody>();
+        mesh = transform.GetChild(0).GetChild(0).GetComponent<MeshRenderer>();
         if(attackType == AttackType.Projectile)
         {
             rb.AddForce(transform.forward*speed);
         }
+        if(attackType == AttackType.GroundSlam)
+        {
+            warningMesh = transform.GetChild(2).GetComponent<MeshRenderer>();
+            mesh.enabled = false;
+        }
         hitBox.enabled = false;
-        //Hitbox transform scale changed for visual debug reasons
-        //Can be removed in case it breaks something
-        hitBox.transform.localScale = Vector3.one/2;
+
         particles.gameObject.SetActive(false);
     }
 
@@ -43,12 +48,15 @@ public class BossAttackBehaviour : MonoBehaviour
         if(hitDelay<Time.time)
         {
             hitBox.enabled = true;
-            hitBox.transform.localScale = Vector3.one;
+            mesh.enabled = true;
             particles.gameObject.SetActive(true);
         }
         if(hitTime<Time.time)
         {
             hitBox.enabled = false;
+            mesh.enabled = false;
+            if(warningMesh != null)
+                warningMesh.enabled = false;
             hitBox.gameObject.SetActive(false);
             if(attackType == AttackType.Projectile || attackType == AttackType.BeamRay)
                 particles.Stop();

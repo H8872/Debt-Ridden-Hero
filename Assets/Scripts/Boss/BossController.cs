@@ -112,6 +112,8 @@ public class BossController : MonoBehaviour
             case 2:
                 attackInRow--;
                 newProjectile = Instantiate(Projectile, shootPointsList[attackInRow].position, shootPointsList[attackInRow].rotation);
+                if(attackInRow==0)
+                    anim.Play("BossSequenceProjectileEnd");
                 break;
             case 0:
             default:
@@ -177,15 +179,15 @@ public class BossController : MonoBehaviour
                 anim.Play("BossPlayerCenteredSlam");
                 break;
             case BossAttackDefinition.AttackName.SimultaneousProjectile:
-                shootPointsAmount = actDefinition.amount;
+                shootPointsAmount = actAmount;
                 RegenerateShootPoints();
                 anim.Play("BossSimultaneousProjectile");
                 break;
             case BossAttackDefinition.AttackName.SequenceProjectile:
-                actDefinition.amount = 3;
-                shootPointsAmount = actDefinition.amount;
+                shootPointsAmount = actAmount;
                 RegenerateShootPoints();
-                attackInRow = (int)actDefinition.amount;
+                attackInRow = (int)actAmount;
+                anim.SetFloat("SequenceSpeed", attackInRow);
                 anim.Play("BossSequenceProjectile");
                 break;
             case BossAttackDefinition.AttackName.SimultanoeusSlamShower:

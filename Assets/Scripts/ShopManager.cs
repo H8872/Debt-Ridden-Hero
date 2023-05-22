@@ -14,6 +14,7 @@ public class ShopManager : MonoBehaviour
                     hospitalVisitText, hospitalVisitAmountText;
     Toggle healToggle, eatToggle;
     Slider progress;
+    public AudioClip BgMusic;
 
     // Start is called before the first frame update
     void Start()
@@ -99,6 +100,7 @@ public class ShopManager : MonoBehaviour
 
     public void EndDay()
     {
+        GameManager.instance.totalDebt = totalDebt;
         if(tempDebt == 0)
         {
             // Debt paid! Win the game!
